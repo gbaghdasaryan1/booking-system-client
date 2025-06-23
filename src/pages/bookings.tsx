@@ -2,32 +2,33 @@ import { useEffect, useState } from 'react';
 import { useStore } from 'zustand';
 import { useAuthStore } from '@/store/useAuthStore';
 import httpClient from '@/configs/httpClient';
+import { withAuth } from '@/hoc/withAuth';
 
-export default function MyBookingsPage() {
+ function Bookings() {
   const [bookings, setBookings] = useState<any[]>([]);
   const [isAdmin, setIsAdmin] = useState(false);
-    const {token, user} = useStore(useAuthStore, (state) => state);
+  const { token, user } = useStore(useAuthStore, (state) => state);
 
   const handleGetBookings = async () => {
-      if (!token) return;
+    if (!token) return;
 
-      const role = user.role;
-      setIsAdmin(role === 'ADMIN');
+    const role = user.role;
+    setIsAdmin(role === 'ADMIN');
 
-      const url = role === 'ADMIN' ? '/booking' : '/booking/my';
+    const url = role === 'ADMIN' ? '/booking' : '/booking/my';
 
-      const res = await httpClient.get(url);
-      setBookings(res.data);
-    };
+    const res = await httpClient.get(url);
+    setBookings(res.data);
+  };
 
-    const handleCancel = async (id: string) => {
-        await httpClient.delete(`/booking/${id}`);
+  const handleCancel = async (id: string) => {
+    await httpClient.delete(`/booking/${id}`);
 
-        setBookings(bookings.filter((i) => i.id !== id));
-    }
+    setBookings(bookings.filter((i) => i.id !== id));
+  }
 
   useEffect(() => {
-    if(token){
+    if (token) {
       handleGetBookings();
     }
   }, [token]);
@@ -56,13 +57,13 @@ export default function MyBookingsPage() {
                 <td className="p-2 border">{new Date(b.start).toLocaleString()}</td>
                 <td className="p-2 border">{new Date(b.end).toLocaleString()}</td>
                 <td className="p-2 border text-center">
-                                    <button
-                                        onClick={() => handleCancel(b.id)}
-                                        className="text-red-500 hover:underline"
-                                    >
-                                        Cancel
-                                    </button>
-                                </td>
+                  <button
+                    onClick={() => handleCancel(b.id)}
+                    className="text-red-500 hover:underline"
+                  >
+                    Cancel
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -70,4 +71,6 @@ export default function MyBookingsPage() {
       )}
     </div>
   );
-}
+};
+
+export default withAuth(Bookings)

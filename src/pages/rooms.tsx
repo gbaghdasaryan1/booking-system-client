@@ -1,4 +1,5 @@
 import httpClient from "@/configs/httpClient";
+import { withAuth } from "@/hoc/withAuth";
 import { useAuthStore } from "@/store/useAuthStore";
 import Link from "next/link";
 import {  useEffect, useState } from "react";
@@ -206,4 +207,4 @@ function RoomsPage() {
     </div>
 };
 
-export default RoomsPage;
+export default withAuth(RoomsPage);
