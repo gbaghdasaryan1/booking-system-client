@@ -1,0 +1,1 @@
+export const API_URL = "https://protected-badlands-61710-df79cfbf33a1.herokuapp.com/api"

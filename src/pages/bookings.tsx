@@ -1,8 +1,7 @@
-// pages/bookings.tsx
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useStore } from 'zustand';
 import { useAuthStore } from '@/store/useAuthStore';
+import httpClient from '@/configs/httpClient';
 
 export default function MyBookingsPage() {
   const [bookings, setBookings] = useState<any[]>([]);
@@ -15,22 +14,14 @@ export default function MyBookingsPage() {
       const role = user.role;
       setIsAdmin(role === 'ADMIN');
 
-      const url = role === 'ADMIN' ? 'http://localhost:4000/booking' : 'http://localhost:4000/booking/my';
+      const url = role === 'ADMIN' ? '/booking' : '/booking/my';
 
-      const res = await axios.get(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await httpClient.get(url);
       setBookings(res.data);
     };
 
     const handleCancel = async (id: string) => {
-        await axios.delete(`http://localhost:4000/booking/${id}`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
+        await httpClient.delete(`/booking/${id}`);
 
         setBookings(bookings.filter((i) => i.id !== id));
     }

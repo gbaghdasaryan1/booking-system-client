@@ -1,7 +1,7 @@
+import httpClient from "@/configs/httpClient";
 import { useAuthStore } from "@/store/useAuthStore";
-import axios, { AxiosError } from "axios";
 import Link from "next/link";
-import { MouseEvent, useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useStore } from "zustand";
 
@@ -41,11 +41,7 @@ function RoomsPage() {
 
     const handleGetRooms = async () => {
         try {
-            const res = await axios.get("http://localhost:4000/room", {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
+            const res = await httpClient.get("/room");
             setRooms(res.data);
         } catch (error) {
             console.log(error);
@@ -55,14 +51,10 @@ function RoomsPage() {
 
     const handleBooking = async () => {
         try {
-            await axios.post("http://localhost:4000/booking", {
+            await httpClient.post("/booking", {
                 roomId: selectedRoom.id,
                 start,
                 end,
-            }, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
             });
             alert("Booking succesful!")
         } catch (error) {
@@ -73,11 +65,7 @@ function RoomsPage() {
 
     const handleDeleteRoom = async () => {
         try {
-            await axios.delete(`http://localhost:4000/room/${selectedRoom.id}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
+            await httpClient.delete(`/room/${selectedRoom.id}`);
             setSelectedRoom({
                 name: "",
                 capacity: 1,
@@ -108,22 +96,14 @@ function RoomsPage() {
     const onSubmit = async (data: AddRoomType) => {
         try {
             if (formType === "add") {
-                await axios.post(`http://localhost:4000/room`, {
+                await httpClient.post(`/room`, {
                     ...data,
                     capacity: +data.capacity
-                }, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
                 });
             } else {
-                await axios.patch(`http://localhost:4000/room/${selectedRoom.id}`, {
+                await httpClient.patch(`/room/${selectedRoom.id}`, {
                     ...data,
                     capacity: +data.capacity
-                }, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
                 });
             }
 

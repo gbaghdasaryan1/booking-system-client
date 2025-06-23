@@ -1,4 +1,4 @@
-import axios from "axios";
+import httpClient from "@/configs/httpClient";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form"
 
@@ -15,7 +15,7 @@ function RegisterPage() {
 
     const onSubmit = async (data: any) => {
         try {
-             await axios.post("http://localhost:4000/auth/register", data);
+             await httpClient.post("/auth/register", data);
             router.push("/login")
         } catch (error) {
             console.log(error);

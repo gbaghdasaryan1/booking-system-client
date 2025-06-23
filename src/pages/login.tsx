@@ -1,5 +1,5 @@
+import httpClient from "@/configs/httpClient";
 import { useAuthStore } from "@/store/useAuthStore";
-import axios from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -19,8 +19,8 @@ function LoginPage() {
 
     const onSubmit = async (data: LoginFormType) => {
         try {
-            const response = await axios.post("http://localhost:4000/auth/login", data);
-            const user = await axios.get(`http://localhost:4000/user/${data.email}`);
+            const response = await httpClient.post("/auth/login", data);
+            const user = await httpClient.get(`/user/${data.email}`);
             setUser(user.data);
             setToken(response.data)
         } catch (error) {
